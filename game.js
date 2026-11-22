@@ -17,8 +17,8 @@ const chapters = {
   create:['THE ADVENTURER’S ATELIER','Create your adventurer','Your adventure begins with you. Who would you like to be?','Begin Adventure'],
   review:['ADVENTURER REGISTRY','Avatar compliance review','Please adjust yourself to match the available options.','Resubmit avatar'],
   denied:['ADVENTURER REGISTRY','Registration denied','Your individuality could not be processed.',''],
-  editor:['REGISTRY MAINTENANCE','Behind the form','The requirements are editable. Decide which ones belong here.','Apply changes'],
-  sandbox:['THE ADVENTURER’S ATELIER','What feels like you?','Keep your wings. Add horns. Change your mind.','']
+  editor:['REGISTRY MAINTENANCE','Behind the form','Turn off the Registry rules to open the sandbox.','Open sandbox'],
+  sandbox:['THE ADVENTURER’S ATELIER','What feels like you?','Keep your wings. Add horns. Change your mind.','Submit avatar']
 };
 const initialAvatar = () => ({
   creature:'Dragon', name:'', custom:'', description:'', expression:'Cheerful',
@@ -86,11 +86,16 @@ function renderEditor(speak = false) {
   }
   const message = failed.length ? `Current avatar fails ${failed.map(i => `rule ${i+1}`).join(', ')}.` : 'Current avatar passes every active rule.';
   $('constraint').hidden = phase !== 'editor';
-  $('constraint').textContent = message;
+  const remaining = enabled.size;
+  $('primary').disabled = remaining > 0;
+  const progress = remaining === 0
+    ? 'All rules removed. You can now open the sandbox.'
+    : `${remaining} of ${rules.length} rules still active. ${message}`;
+  $('constraint').textContent = progress;
   $('constraint').classList.toggle('passing', failed.length === 0);
   for (const input of $('toggles').querySelectorAll('input')) input.checked = enabled.has(Number(input.value));
-  if (speak && previousStatus !== message) announce(message);
-  previousStatus = message;
+  if (speak && previousStatus !== progress) announce(progress);
+  previousStatus = progress;
 }
 
 function setPhase(next, moveFocus = true) {
@@ -102,6 +107,9 @@ function setPhase(next, moveFocus = true) {
   $('subtitle').textContent = subtitle;
   $('primary').textContent = action;
   $('primary').hidden = !action;
+  $('primary').disabled = false;
+  previousStatus = '';
+  announce('');
   $('creator').hidden = phase === 'denied';
   $('review').hidden = phase !== 'review';
   $('editor').hidden = phase !== 'editor';
@@ -115,7 +123,7 @@ function setPhase(next, moveFocus = true) {
   syncControls();
   renderPortrait();
   if (phase === 'review') renderReview(true);
-  if (phase === 'editor') renderEditor();
+  if (phase === 'editor') renderEditor(true);
   if (phase === 'sandbox') $('subtitle').append(document.createElement('br'), 'The rules were written. They can be rewritten.');
   if (moveFocus) {
     $('title').focus({preventScroll:true});
@@ -186,10 +194,13 @@ $('creator').addEventListener('submit', event => {
       announce(message);
       $('review').scrollIntoView({block:'nearest'});
     }
-  } else if (phase === 'editor') {
+  } else if (phase === 'editor' && enabled.size === 0) {
     const {custom, description} = avatar;
     avatar = {...structuredClone(firstDesign), custom, description};
     setPhase('sandbox');
+  } else if (phase === 'sandbox' && !$('ending').open) {
+    $('ending-avatar').innerHTML = drawAvatar(avatar, 'sandbox');
+    $('ending').showModal();
   }
 });
 
@@ -211,5 +222,11 @@ $('inspect').addEventListener('click', event => {
 });
 $('skip').addEventListener('click', openEditor);
 $('restart').addEventListener('click', () => start());
+$('ending-back').addEventListener('click', () => $('ending').close());
+$('ending-restart').addEventListener('click', () => {
+  $('ending').close();
+  $('ending-avatar').replaceChildren();
+  start();
+});
 
 start(false);
