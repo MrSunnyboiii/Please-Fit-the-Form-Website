@@ -4,14 +4,7 @@ A short browser game about who gets to write the rules for belonging.
 
 ## Play locally
 
-Unzip the download, then double-click `index.html` to open it in your browser.
-There is no installation, server, account, or internet connection needed.
-
-## GitHub Pages
-
-Put the game files at the root of a GitHub repository. In **Settings → Pages**,
-choose **Deploy from a branch**, select your branch and **/(root)**, and save.
-The game uses relative paths, so it can also run on a project site.
+[Play Here!](https://mrsunnyboiii.github.io/Please-Fit-the-Form-Website/)
 
 ## Source
 
