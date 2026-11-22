@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A fantasy character creator about who writes the rules for belonging.">
+<title>Please Fit the Form</title>
+<link rel="stylesheet" href="styles.css">
+<script defer src="avatar.js"></script>
+<script defer src="game.js"></script>
+</head>
+<body data-phase="create">
+<header class="top"><div class="brand"><span class="crest" aria-hidden="true">✦</span> Please Fit the Form</div><button id="skip" class="text-button">Skip to rules editor</button></header>
+<main>
+  <div class="intro">
+    <p id="chapter" class="eyebrow">THE ADVENTURER’S ATELIER</p>
+    <h1 id="title" tabindex="-1">Create your adventurer</h1>
+    <p id="subtitle">Your adventure begins with you. Who would you like to be?</p>
+  </div>
+  <div id="announcement" class="sr" role="status"></div>
+  <div class="layout">
+    <aside class="portrait" aria-label="Avatar preview">
+      <div class="portrait-head"><span aria-hidden="true">✧</span> <span id="portrait-label">LIVE PORTRAIT</span></div>
+      <div class="stage">
+        <div id="avatar" class="avatar" aria-hidden="true"></div>
+        <div id="original" class="original" hidden><div id="original-art" aria-hidden="true"></div><span>Your first design</span></div>
+      </div>
+      <div class="caption"><span class="flourish" aria-hidden="true">✦</span><h2 id="portrait-name">Unnamed adventurer</h2><p id="portrait-kind"></p><p id="portrait-description" hidden></p><p id="reflection" hidden>Who gets to decide which bodies belong?</p></div>
+    </aside>
+    <section class="panel" aria-label="Character creator and registry">
+      <div id="review" hidden><h2>Registry requirements</h2><p id="registry-note"></p><ol id="rules"></ol></div>
+      <div id="denied" hidden><p class="denial">REGISTRATION DENIED: No approved configuration available.</p><a id="inspect" href="#editor">Inspect requirements</a></div>
+      <div id="editor" hidden>
+        <h2>Registry rules editor</h2>
+        <p>Switch off a rule to see what it changes. Try the form below as you edit.</p>
+        <button id="remove" class="secondary">Remove all restrictions</button>
+        <div id="toggles"></div>
+      </div>
+      <form id="creator" novalidate>
+        <fieldset><legend>Creature</legend><div id="creatures" class="creatures"></div><p id="custom-wrap" hidden><label for="custom">Custom creature name</label><input id="custom" type="text" autocomplete="off" maxlength="40"></p></fieldset>
+        <div class="control-grid">
+          <label for="name" id="name-label">Adventurer name<input id="name" type="text" autocomplete="off" placeholder="e.g. Bramble"></label>
+          <label for="expression">Expression<select id="expression"><option>Cheerful</option><option>Serious</option><option>Sleepy</option><option>Mischievous</option></select></label>
+          <label for="shape">Body shape<select id="shape"><option>Round</option><option>Slender</option><option>Broad</option><option>Custom</option></select></label>
+          <label for="height">Height <output id="height-value" for="height"></output><input id="height" type="range" min="60" max="240"></label>
+        </div>
+        <fieldset><legend>Color</legend><div id="colors" class="colors"></div></fieldset>
+        <fieldset><legend>Features</legend><div id="features" class="features"></div></fieldset>
+        <p id="description-wrap" hidden><label for="description">Describe yourself in your own words <span>(optional)</span></label><textarea id="description" rows="2" maxlength="240"></textarea></p>
+        <p id="constraint" class="constraint" hidden></p>
+      </form>
+      <div id="actions" class="actions"><button id="primary" class="primary" type="submit" form="creator">Begin Adventure</button><button id="restart" class="secondary" hidden>Restart</button></div>
+    </section>
+  </div>
+</main>
+<footer>A short character creation game <span aria-hidden="true">✦</span> Nothing you enter is saved or sent.</footer>
+</body>
+</html>
